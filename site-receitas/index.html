@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Sabor Coletivo — Receitas Colaborativas</title>
+  <meta name="description" content="Site colaborativo de receitas: explore pratos da comunidade e envie a sua." />
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+
+  <!-- ===== HEADER / NAVBAR FIXA ===== -->
+  <header class="header">
+    <nav class="navbar" aria-label="Navegação principal">
+      <a href="#inicio" class="logo">
+        <span class="logo-icon">🍳</span>
+        <span>Sabor Coletivo</span>
+      </a>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#inicio">Início</a></li>
+        <li><a href="#receitas">Receitas</a></li>
+        <li><a href="#enviar">Enviar Receita</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <!-- ===== SEÇÃO 1: INÍCIO ===== -->
+    <section id="inicio" class="hero">
+      <div class="hero-content">
+        <h1>Receitas feitas pela <span class="accent">comunidade</span>, para a comunidade.</h1>
+        <p>Descubra pratos incríveis, compartilhe os seus favoritos e inspire outras pessoas na cozinha.</p>
+        <div class="hero-actions">
+          <a href="#receitas" class="btn btn-primary">Explorar receitas</a>
+          <a href="#enviar" class="btn btn-outline">Enviar a minha</a>
+        </div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="floating-card card-1">🥑</div>
+        <div class="floating-card card-2">🍝</div>
+        <div class="floating-card card-3">🍰</div>
+        <div class="floating-card card-4">🥗</div>
+      </div>
+    </section>
+
+    <!-- ===== SEÇÃO 2: RECEITAS ===== -->
+    <section id="receitas" class="section">
+      <div class="section-header">
+        <h2>Receitas em destaque</h2>
+        <p>Pratos enviados por quem ama cozinhar.</p>
+      </div>
+
+      <!-- Container que recebe os cards dinamicamente via JS -->
+      <div class="cards-grid" id="cardsGrid"></div>
+    </section>
+
+    <!-- ===== SEÇÃO 3: ENVIAR RECEITA ===== -->
+    <section id="enviar" class="section section-alt">
+      <div class="section-header">
+        <h2>Envie a sua receita</h2>
+        <p>Preencha o formulário abaixo e contribua com a comunidade.</p>
+      </div>
+
+      <form id="formReceita" class="form" novalidate>
+        <div class="form-row">
+          <div class="form-group">
+            <label for="nome">Nome da receita *</label>
+            <input type="text" id="nome" name="nome" placeholder="Ex.: Bolo de cenoura" required />
+          </div>
+
+          <div class="form-group">
+            <label for="autor">Autor *</label>
+            <input type="text" id="autor" name="autor" placeholder="Seu nome" required />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label for="categoria">Categoria *</label>
+            <select id="categoria" name="categoria" required>
+              <option value="">Selecione uma categoria</option>
+              <option value="Entrada">Entrada</option>
+              <option value="Prato principal">Prato principal</option>
+              <option value="Sobremesa">Sobremesa</option>
+              <option value="Bebida">Bebida</option>
+              <option value="Lanche">Lanche</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="tempo">Tempo de preparo (minutos) *</label>
+            <input type="number" id="tempo" name="tempo" min="1" max="999" placeholder="Ex.: 45" required />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="ingredientes">Ingredientes *</label>
+          <textarea id="ingredientes" name="ingredientes" rows="4" placeholder="Liste os ingredientes, um por linha" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="modo">Modo de preparo *</label>
+          <textarea id="modo" name="modo" rows="5" placeholder="Descreva o passo a passo" required></textarea>
+        </div>
+
+        <div class="form-group">
+          <label for="imagem">URL da imagem</label>
+          <input type="url" id="imagem" name="imagem" placeholder="https://exemplo.com/foto.jpg" />
+        </div>
+
+        <div class="form-group checkbox-group">
+          <input type="checkbox" id="autorizacao" name="autorizacao" required />
+          <label for="autorizacao">Autorizo a publicação desta receita no site. *</label>
+        </div>
+
+        <!-- Mensagens de feedback -->
+        <div id="formMessage" class="form-message" role="status" aria-live="polite"></div>
+
+        <div class="form-actions">
+          <button type="submit" class="btn btn-primary">Enviar receita</button>
+          <button type="reset" class="btn btn-outline">Limpar</button>
+        </div>
+      </form>
+    </section>
+
+    <!-- ===== SEÇÃO 4: SOBRE ===== -->
+    <section id="sobre" class="section">
+      <div class="about">
+        <div class="about-text">
+          <h2>Sobre o projeto</h2>
+          <p>
+            O <strong>Sabor Coletivo</strong> é um projeto acadêmico desenvolvido para a disciplina
+            de Programação para Internet. A ideia é simples: criar um espaço onde qualquer pessoa
+            possa compartilhar suas receitas favoritas e descobrir novos pratos.
+          </p>
+          <p>
+            O site foi construído utilizando apenas <strong>HTML5</strong>, <strong>CSS3</strong> e
+            <strong>JavaScript puro</strong>, sem o uso de frameworks, focando em estrutura semântica,
+            layout responsivo com Flexbox e interatividade no lado do cliente.
+          </p>
+          <ul class="features">
+            <li>✔ Estrutura HTML semântica</li>
+            <li>✔ Layout responsivo com Flexbox</li>
+            <li>✔ Formulário validado com JavaScript</li>
+            <li>✔ Cards adicionados dinamicamente</li>
+          </ul>
+        </div>
+        <aside class="about-card">
+          <h3>🍽️ Comunidade</h3>
+          <p>Centenas de receitas compartilhadas por pessoas reais.</p>
+          <h3>⚡ Rápido</h3>
+          <p>Site leve, sem frameworks, carregamento instantâneo.</p>
+          <h3>📱 Responsivo</h3>
+          <p>Funciona perfeitamente em qualquer dispositivo.</p>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== FOOTER ===== -->
+  <footer class="footer">
+    <p>© 2026 Sabor Coletivo — Projeto acadêmico de Programação para Internet.</p>
+  </footer>
+
+  <script src="js/script.js"></script>
+</body>
+</html>
