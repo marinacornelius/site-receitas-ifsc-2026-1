@@ -86,14 +86,15 @@
         <div class="form-row">
           <div class="form-group">
             <label for="categoria">Categoria *</label>
-            <select id="categoria" name="categoria" required>
+            <select id="categoria" name="categoria">
               <option value="">Selecione uma categoria</option>
-              <option value="Entrada">Entrada</option>
-              <option value="Prato principal">Prato principal</option>
-              <option value="Sobremesa">Sobremesa</option>
-              <option value="Bebida">Bebida</option>
-              <option value="Lanche">Lanche</option>
+              <!-- Preenchido dinamicamente via JS -->
             </select>
+          </div>
+
+          <div class="form-group">
+            <label for="novaCategoria">Nova categoria</label>
+            <input type="text" id="novaCategoria" name="novaCategoria" placeholder="Ex.: Café da Manhã" />
           </div>
 
           <div class="form-group">
@@ -168,8 +169,27 @@
 
   <!-- ===== FOOTER ===== -->
   <footer class="footer">
-    <p>© 2026 Sabor Coletivo — Projeto acadêmico de Programação para Internet.</p>
+    <p>© 2026 Receitas de Família — Projeto acadêmico de Programação para Internet · IFSC Garopaba</p>
   </footer>
+
+  <div id="recipeModal" class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle" hidden>
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <article class="modal-content">
+      <button class="modal-close" id="modalClose" aria-label="Fechar receita">✕</button>
+      <img class="modal-img" id="modalImg" alt="Imagem da receita" />
+      <div class="modal-body">
+        <p class="card-category modal-category" id="modalCategory"></p>
+        <h3 id="modalTitle"></h3>
+        <p class="card-author" id="modalAuthor"></p>
+        <p class="card-time" id="modalTime"></p>
+        <div class="card-stars" id="modalStars"></div>
+        <h4>Ingredientes</h4>
+        <p class="modal-text" id="modalIngredients"></p>
+        <h4>Modo de preparo</h4>
+        <p class="modal-text" id="modalMethod"></p>
+      </div>
+    </article>
+  </div>
 
   <script src="js/script.js"></script>
 </body>
