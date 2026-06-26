@@ -7,7 +7,8 @@
 const STORAGE = {
   receitas: 'rf_receitas',
   categorias: 'rf_categorias',
-  ratings: 'rf_ratings'
+  ratings: 'rf_ratings',
+  userId: 'rf_user_id'
 };
 
 const RECEITAS_BASE = [
@@ -81,6 +82,16 @@ const IMAGEM_PADRAO = 'https://images.unsplash.com/photo-1495195134817-aeb325a55
 let receitas = [];
 let categorias = [];
 let ratings = {};
+let userId = '';
+
+function obterUserId() {
+  let id = localStorage.getItem(STORAGE.userId);
+  if (!id) {
+    id = 'u-' + Date.now() + '-' + Math.random().toString(36).slice(2, 6);
+    localStorage.setItem(STORAGE.userId, id);
+  }
+  return id;
+}
 
 // ===== ELEMENTOS DO DOM =====
 const cardsGrid = document.getElementById('cardsGrid');
@@ -106,14 +117,29 @@ let categoriaAtiva = 'Todas';
 
 function carregar() {
   try {
-    receitas = JSON.parse(localStorage.getItem(STORAGE.receitas)) || [...RECEITAS_BASE];
-    categorias = JSON.parse(localStorage.getItem(STORAGE.categorias)) || [...CATEGORIAS_BASE];
-    ratings = JSON.parse(localStorage.getItem(STORAGE.ratings)) || {};
+    const r = localStorage.getItem(STORAGE.receitas);
+    const c = localStorage.getItem(STORAGE.categorias);
+    const rt = localStorage.getItem(STORAGE.ratings);
+
+    receitas = r ? JSON.parse(r) : [...RECEITAS_BASE];
+    categorias = c ? JSON.parse(c) : [...CATEGORIAS_BASE];
+
+    if (rt) {
+      const parsed = JSON.parse(rt);
+      const primeiraChave = Object.keys(parsed)[0];
+      ratings = (primeiraChave && Array.isArray(parsed[primeiraChave]))
+        ? {}
+        : parsed;
+    } else {
+      ratings = {};
+    }
   } catch (error) {
     receitas = [...RECEITAS_BASE];
     categorias = [...CATEGORIAS_BASE];
     ratings = {};
   }
+
+  userId = obterUserId();
 }
 
 function salvar() {
@@ -153,11 +179,15 @@ function novoId() {
 }
 
 function calcMedia(id) {
-  const chave = String(id);
-  const votos = Array.isArray(ratings[chave]) ? ratings[chave] : [];
-  if (!votos.length) return 0;
-  const soma = votos.reduce((total, valor) => total + Number(valor), 0);
-  return soma / votos.length;
+  const votos = ratings[String(id)];
+  if (!votos || !Object.keys(votos).length) return { media: 0, total: 0 };
+  const valores = Object.values(votos).map(Number);
+  const soma = valores.reduce((total, valor) => total + valor, 0);
+  return { media: soma / valores.length, total: valores.length };
+}
+
+function meuVoto(id) {
+  return (ratings[String(id)] && ratings[String(id)][userId]) || 0;
 }
 
 function htmlEstrelas(media, total) {
@@ -175,8 +205,7 @@ function renderStars(id, container = null) {
   const target = container || document.querySelector(`.card-stars[data-recipe-id="${id}"]`);
   if (!target) return;
 
-  const media = calcMedia(id);
-  const total = Array.isArray(ratings[String(id)]) ? ratings[String(id)].length : 0;
+  const { media, total } = calcMedia(id);
   target.innerHTML = htmlEstrelas(media, total);
 
   target.querySelectorAll('.star-btn').forEach((btn, index) => {
@@ -195,13 +224,48 @@ function renderStars(id, container = null) {
   });
 }
 
-function votar(id, valor) {
-  const chave = String(id);
-  if (!Array.isArray(ratings[chave])) {
-    ratings[chave] = [];
+function renderModalStars(id) {
+  if (!modalStars) return;
+
+  modalStars.innerHTML = '';
+  const votoAtual = meuVoto(id);
+  const { media, total } = calcMedia(id);
+  const preenchidas = votoAtual || Math.round(media);
+
+  for (let i = 1; i <= 5; i++) {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'star-btn' + (i <= preenchidas ? ' filled' : '');
+    btn.setAttribute('aria-label', `Dar ${i} estrela${i > 1 ? 's' : ''}`);
+    btn.textContent = '★';
+
+    btn.addEventListener('mouseenter', () => {
+      modalStars.querySelectorAll('.star-btn').forEach((s, idx) => {
+        s.classList.toggle('hovered', idx < i);
+      });
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      modalStars.querySelectorAll('.star-btn').forEach(s => s.classList.remove('hovered'));
+    });
+
+    btn.addEventListener('click', () => votar(id, i));
+    modalStars.appendChild(btn);
   }
 
-  ratings[chave].push(Number(valor));
+  const contador = document.createElement('span');
+  contador.className = 'rating-count';
+  contador.textContent = `(${total})`;
+  modalStars.appendChild(contador);
+}
+
+function votar(id, valor) {
+  const chave = String(id);
+  if (!ratings[chave] || typeof ratings[chave] !== 'object' || Array.isArray(ratings[chave])) {
+    ratings[chave] = {};
+  }
+
+  ratings[chave][userId] = Number(valor);
   salvar();
 
   if (recipeModal.classList.contains('open') && recipeModal.dataset.recipeId === String(id)) {
@@ -232,7 +296,7 @@ function abrirModal(id) {
     modalImg.src = IMAGEM_PADRAO;
   };
 
-  renderStars(id, modalStars);
+  renderModalStars(id);
   recipeModal.hidden = false;
   recipeModal.classList.add('open');
   document.body.style.overflow = 'hidden';
