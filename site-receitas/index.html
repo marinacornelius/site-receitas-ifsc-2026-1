@@ -3,18 +3,18 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Sabor Coletivo — Receitas Colaborativas</title>
+  <title>Receitas de Família</title>
   <meta name="description" content="Site colaborativo de receitas: explore pratos da comunidade e envie a sua." />
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
 
   <!-- ===== HEADER / NAVBAR FIXA ===== -->
-  <header class="header">
+  <header class="header" id="topo">
     <nav class="navbar" aria-label="Navegação principal">
       <a href="#inicio" class="logo">
         <span class="logo-icon">🍳</span>
-        <span>Sabor Coletivo</span>
+        <span>Receitas de Família</span>
       </a>
 
       <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
@@ -50,20 +50,23 @@
     </section>
 
     <!-- ===== SEÇÃO 2: RECEITAS ===== -->
-    <section id="receitas" class="section">
+    <section id="receitas" class="section" aria-labelledby="titulo-receitas">
       <div class="section-header">
-        <h2>Receitas em destaque</h2>
+        <h2 id="titulo-receitas">Receitas em destaque</h2>
         <p>Pratos enviados por quem ama cozinhar.</p>
       </div>
+
+      <nav class="cat-filters" id="catFilters" aria-label="Filtrar por categoria"></nav>
+      <p class="empty-msg" id="emptyMsg" hidden>Nenhuma receita nesta categoria ainda.</p>
 
       <!-- Container que recebe os cards dinamicamente via JS -->
       <div class="cards-grid" id="cardsGrid"></div>
     </section>
 
     <!-- ===== SEÇÃO 3: ENVIAR RECEITA ===== -->
-    <section id="enviar" class="section section-alt">
+    <section id="enviar" class="section section-alt" aria-labelledby="titulo-enviar">
       <div class="section-header">
-        <h2>Envie a sua receita</h2>
+        <h2 id="titulo-enviar">Envie a sua receita</h2>
         <p>Preencha o formulário abaixo e contribua com a comunidade.</p>
       </div>
 
@@ -130,10 +133,10 @@
     </section>
 
     <!-- ===== SEÇÃO 4: SOBRE ===== -->
-    <section id="sobre" class="section">
+    <section id="sobre" class="section" aria-labelledby="titulo-sobre">
       <div class="about">
         <div class="about-text">
-          <h2>Sobre o projeto</h2>
+          <h2 id="titulo-sobre">Sobre o projeto</h2>
           <p>
             O <strong>Sabor Coletivo</strong> é um projeto acadêmico desenvolvido para a disciplina
             de Programação para Internet. A ideia é simples: criar um espaço onde qualquer pessoa
