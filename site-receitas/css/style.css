@@ -262,6 +262,32 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .section-header p { color: var(--muted); font-size: 1.05rem; }
 
+.cat-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.filter-btn {
+  border-radius: 999px;
+  border: 2px solid var(--corda);
+  background: var(--creme);
+  color: var(--cafe-torrado);
+  padding: 0.6rem 1rem;
+  font-weight: 600;
+  transition: all var(--transition);
+  cursor: pointer;
+}
+
+.filter-btn:hover,
+.filter-btn.active {
+  background: var(--paprica);
+  color: #fff;
+  border-color: var(--paprica);
+}
+
 /* ===== CARDS (FLEXBOX) ===== */
 .cards-grid {
   display: flex;
@@ -347,6 +373,39 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   text-align: center;
 }
 .card-btn:hover { background: var(--primary); }
+
+.tag-cat {
+  cursor: pointer;
+  color: var(--salvia);
+  font-weight: 600;
+  transition: all var(--transition);
+}
+
+.tag-cat:hover {
+  background: var(--salvia);
+  color: #fff;
+  padding: 0.1rem 0.35rem;
+  border-radius: 999px;
+}
+
+.card-author {
+  font-style: italic;
+  color: var(--canela);
+}
+
+.card-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  color: var(--corda);
+}
+
+.star.filled {
+  color: var(--star-on);
+}
 
 /* ===== FORMULÁRIO ===== */
 .form {
