@@ -90,6 +90,17 @@ const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
 const catFilters = document.getElementById('catFilters');
 const emptyMsg = document.getElementById('emptyMsg');
+const recipeModal = document.getElementById('recipeModal');
+const modalOverlay = document.getElementById('modalOverlay');
+const modalClose = document.getElementById('modalClose');
+const modalImg = document.getElementById('modalImg');
+const modalCategory = document.getElementById('modalCategory');
+const modalTitle = document.getElementById('modalTitle');
+const modalAuthor = document.getElementById('modalAuthor');
+const modalTime = document.getElementById('modalTime');
+const modalStars = document.getElementById('modalStars');
+const modalIngredients = document.getElementById('modalIngredients');
+const modalMethod = document.getElementById('modalMethod');
 
 let categoriaAtiva = 'Todas';
 
@@ -184,11 +195,47 @@ function votar(id, valor) {
 
   ratings[chave].push(Number(valor));
   salvar();
-  renderCards();
+
+  if (recipeModal.classList.contains('open') && recipeModal.dataset.recipeId === String(id)) {
+    abrirModal(id);
+  } else {
+    renderCards();
+  }
 }
 
 function renderCards() {
   renderizarReceitas();
+}
+
+function abrirModal(id) {
+  const rec = receitas.find(receita => String(receita.id) === String(id));
+  if (!rec || !recipeModal) return;
+
+  recipeModal.dataset.recipeId = String(id);
+  modalTitle.textContent = rec.nome;
+  modalCategory.textContent = rec.categoria;
+  modalAuthor.textContent = `por ${rec.autor || 'Usuário'}`;
+  modalTime.textContent = `⏱ ${rec.tempo} minutos`;
+  modalIngredients.textContent = rec.ingredientes || 'Sem ingredientes informados.';
+  modalMethod.textContent = rec.modo || 'Sem modo de preparo informado.';
+  modalImg.src = rec.imagem || IMAGEM_PADRAO;
+  modalImg.alt = `Foto da receita ${rec.nome}`;
+  modalImg.onerror = () => {
+    modalImg.src = IMAGEM_PADRAO;
+  };
+
+  renderStars(id, modalStars);
+  recipeModal.hidden = false;
+  recipeModal.classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+
+function fecharModal() {
+  if (!recipeModal) return;
+
+  recipeModal.hidden = true;
+  recipeModal.classList.remove('open');
+  document.body.style.overflow = '';
 }
 
 // ===== MENU MOBILE =====
@@ -229,13 +276,7 @@ function criarCard(receita) {
 
   // Ação do botão "Ver receita"
   card.querySelector('.card-btn').addEventListener('click', () => {
-    alert(
-      `Receita: ${receita.nome}\n` +
-      `Categoria: ${receita.categoria}\n` +
-      `Tempo de preparo: ${receita.tempo} minutos` +
-      (receita.ingredientes ? `\n\nIngredientes:\n${receita.ingredientes}` : '') +
-      (receita.modo ? `\n\nModo de preparo:\n${receita.modo}` : '')
-    );
+    abrirModal(receita.id);
   });
 
   return card;
@@ -417,4 +458,18 @@ document.addEventListener('DOMContentLoaded', () => {
   carregar();
   preencherCategorias();
   renderizarReceitas();
+
+  if (modalClose) {
+    modalClose.addEventListener('click', fecharModal);
+  }
+
+  if (modalOverlay) {
+    modalOverlay.addEventListener('click', fecharModal);
+  }
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && recipeModal && !recipeModal.hidden) {
+      fecharModal();
+    }
+  });
 });
