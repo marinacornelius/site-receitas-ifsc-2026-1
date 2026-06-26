@@ -88,6 +88,10 @@ const form = document.getElementById('formReceita');
 const formMessage = document.getElementById('formMessage');
 const navToggle = document.getElementById('navToggle');
 const navLinks = document.getElementById('navLinks');
+const catFilters = document.getElementById('catFilters');
+const emptyMsg = document.getElementById('emptyMsg');
+
+let categoriaAtiva = 'Todas';
 
 function carregar() {
   try {
@@ -107,17 +111,26 @@ function salvar() {
   localStorage.setItem(STORAGE.ratings, JSON.stringify(ratings));
 }
 
-function preencherCategorias() {
-  const categoriaSelect = document.getElementById('categoria');
-  if (!categoriaSelect) return;
+function renderSelect() {
+  const selCat = document.getElementById('categoria');
+  if (!selCat) return;
 
-  categoriaSelect.innerHTML = '<option value="">Selecione uma categoria</option>';
-  categorias.forEach(categoria => {
-    const option = document.createElement('option');
-    option.value = categoria;
-    option.textContent = categoria;
-    categoriaSelect.appendChild(option);
+  selCat.innerHTML = '<option value="">Selecione uma categoria</option>';
+  categorias.forEach(cat => {
+    const opt = document.createElement('option');
+    opt.value = cat;
+    opt.textContent = cat;
+    selCat.appendChild(opt);
   });
+}
+
+function preencherCategorias() {
+  renderSelect();
+  renderFiltros();
+}
+
+function novoId() {
+  return Date.now() + '-' + Math.random().toString(36).slice(2, 5);
 }
 
 // ===== MENU MOBILE =====
@@ -170,11 +183,54 @@ function criarCard(receita) {
 /**
  * Renderiza as receitas carregadas no grid.
  */
+function renderFiltros() {
+  if (!catFilters) return;
+
+  if (categoriaAtiva !== 'Todas' && !categorias.includes(categoriaAtiva)) {
+    categoriaAtiva = 'Todas';
+  }
+
+  catFilters.innerHTML = '';
+
+  const btnTodas = document.createElement('button');
+  btnTodas.type = 'button';
+  btnTodas.className = 'filter-btn';
+  if (categoriaAtiva === 'Todas') btnTodas.classList.add('active');
+  btnTodas.textContent = 'Todas';
+  btnTodas.addEventListener('click', () => filtrar('Todas'));
+  catFilters.appendChild(btnTodas);
+
+  categorias.forEach(cat => {
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'filter-btn';
+    if (categoriaAtiva === cat) btn.classList.add('active');
+    btn.textContent = cat;
+    btn.addEventListener('click', () => filtrar(cat));
+    catFilters.appendChild(btn);
+  });
+}
+
+function filtrar(cat) {
+  categoriaAtiva = cat;
+  renderFiltros();
+  renderizarReceitas();
+}
+
 function renderizarReceitas() {
   if (!cardsGrid) return;
 
+  const receitasVisiveis = categoriaAtiva === 'Todas'
+    ? receitas
+    : receitas.filter(receita => receita.categoria === categoriaAtiva);
+
   cardsGrid.innerHTML = '';
-  receitas.forEach(receita => {
+
+  if (emptyMsg) {
+    emptyMsg.hidden = receitasVisiveis.length > 0;
+  }
+
+  receitasVisiveis.forEach(receita => {
     cardsGrid.appendChild(criarCard(receita));
   });
 }
@@ -263,6 +319,7 @@ form.addEventListener('submit', (e) => {
 
   // Monta o objeto da nova receita
   const novaReceita = {
+    id: novoId(),
     nome: document.getElementById('nome').value.trim(),
     autor: document.getElementById('autor').value.trim(),
     categoria: categoriaFinal,
