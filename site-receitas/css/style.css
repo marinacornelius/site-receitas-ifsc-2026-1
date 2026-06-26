@@ -11,15 +11,28 @@
 }
 
 :root {
-  --bg: #fdfaf6;
-  --bg-alt: #fff5ec;
-  --surface: #ffffff;
-  --text: #2d2a26;
-  --muted: #6b6660;
-  --primary: #e07a3f;
-  --primary-dark: #c8632a;
-  --accent: #4a7c59;
-  --border: #ece6df;
+  --cafe-torrado: #5c3d1e;
+  --paprica: #c45c3a;
+  --terracota: #d4956a;
+  --canela: #9a6234;
+  --pergaminho: #fdf7ef;
+  --creme: #fff9f2;
+  --baunilha: #f5ece0;
+  --corda: #e8d5b7;
+  --salvia: #6b7c5c;
+  --mogno: #3d1e0a;
+  --castanho: #6b5040;
+  --star-on: #d4880a;
+
+  --bg: var(--pergaminho);
+  --bg-alt: var(--creme);
+  --surface: var(--creme);
+  --text: var(--mogno);
+  --muted: var(--castanho);
+  --primary: var(--paprica);
+  --primary-dark: var(--canela);
+  --accent: var(--salvia);
+  --border: var(--corda);
   --shadow: 0 6px 24px rgba(60, 40, 20, 0.08);
   --radius: 14px;
   --transition: 0.25s ease;
@@ -28,11 +41,16 @@
 html { scroll-behavior: smooth; }
 
 body {
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  font-family: 'Georgia', serif;
   background: var(--bg);
   color: var(--text);
   line-height: 1.6;
   -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, label, .btn, .nav-links a,
+.filter-btn, .card-btn-view, .card-btn, .hero-actions a {
+  font-family: 'Segoe UI', sans-serif;
 }
 
 img { max-width: 100%; display: block; }
@@ -45,9 +63,8 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   top: 0;
   left: 0;
   right: 0;
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(10px);
-  border-bottom: 1px solid var(--border);
+  background: var(--cafe-torrado);
+  border-bottom: 3px solid var(--terracota);
   z-index: 100;
 }
 
