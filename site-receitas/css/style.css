@@ -84,7 +84,7 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   gap: 0.5rem;
   font-size: 1.25rem;
   font-weight: 700;
-  color: var(--text);
+  color: var(--terracota);
 }
 
 .logo-icon { font-size: 1.5rem; }
@@ -97,12 +97,12 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
 
 .nav-links a {
   font-weight: 500;
-  color: var(--muted);
+  color: var(--creme);
   position: relative;
   transition: color var(--transition);
 }
 
-.nav-links a:hover { color: var(--primary); }
+.nav-links a:hover { color: var(--terracota); }
 
 .nav-links a::after {
   content: '';
