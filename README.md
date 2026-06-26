@@ -672,21 +672,21 @@ O usuário clica em uma estrela no modal para votar. O voto é salvo e a média 
 
 ```js
 function calcMedia(id) {
-  const lista = ratings[id] || [];
-  if (!lista.length) return { media: 0, total: 0 };
-  const soma = lista.reduce((a, b) => a + b, 0);
-  return { media: soma / lista.length, total: lista.length };
+  const votos = ratings[id];
+  if (!votos || !Object.keys(votos).length) return { media: 0, total: 0 };
+  const valores = Object.values(votos);
+  const soma = valores.reduce((a, b) => a + b, 0);
+  return { media: soma / valores.length, total: valores.length };
 }
 
 function votar(id, valor) {
-  if (!ratings[id]) ratings[id] = [];
-  ratings[id].push(valor);  // registra o voto
-  salvar();                  // persiste no localStorage
+  if (!ratings[id]) ratings[id] = {};
+  ratings[id][userId] = valor;  // substitui o voto anterior se já existir
+  salvar();                     // persiste no localStorage
 
   const { media, total } = calcMedia(id);
-  atualizarAvg(id, media, total); // atualiza texto no modal
-  renderStars(id);                // redesenha estrelas no modal
-  renderCards();                  // atualiza estrelas nos cards
+  renderStars(id);              // redesenha estrelas no modal
+  renderCards();                // atualiza estrelas nos cards
 }
 ```
 
