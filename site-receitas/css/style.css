@@ -558,6 +558,65 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   font-size: 0.9rem;
 }
 
+/* ===== MODAL ===== */
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: none;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal.open {
+  display: flex;
+}
+
+.modal-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(61, 30, 10, 0.6);
+  backdrop-filter: blur(4px);
+}
+
+.modal-content {
+  position: relative;
+  z-index: 1;
+  background: var(--creme);
+  color: var(--text);
+  width: min(92vw, 760px);
+  max-height: 90vh;
+  overflow-y: auto;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  animation: modalIn 0.28s ease;
+}
+
+@keyframes modalIn {
+  from { opacity: 0; transform: translateY(12px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.star-btn {
+  background: transparent;
+  border: none;
+  font-size: 1.3rem;
+  color: var(--corda);
+  cursor: pointer;
+  transition: transform var(--transition), color var(--transition);
+}
+
+.star-btn.filled,
+.star-btn.hovered {
+  color: var(--star-on);
+  transform: scale(1.15);
+}
+
+.modal-text {
+  white-space: pre-wrap;
+}
+
 /* ===== RESPONSIVO ===== */
 @media (max-width: 768px) {
   .nav-toggle { display: flex; }
@@ -582,4 +641,21 @@ button { font-family: inherit; cursor: pointer; border: none; background: none; 
   .form-actions .btn { flex: 1; text-align: center; }
 
   .section { padding: 60px 1rem; }
+}
+
+@media (max-width: 600px) {
+  .cat-filters {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+  }
+
+  .modal {
+    align-items: flex-end;
+    padding: 0;
+  }
+
+  .modal-content {
+    border-radius: var(--radius) var(--radius) 0 0;
+    width: 100%;
+  }
 }
