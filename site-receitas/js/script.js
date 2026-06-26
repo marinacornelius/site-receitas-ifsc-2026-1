@@ -133,6 +133,64 @@ function novoId() {
   return Date.now() + '-' + Math.random().toString(36).slice(2, 5);
 }
 
+function calcMedia(id) {
+  const chave = String(id);
+  const votos = Array.isArray(ratings[chave]) ? ratings[chave] : [];
+  if (!votos.length) return 0;
+  const soma = votos.reduce((total, valor) => total + Number(valor), 0);
+  return soma / votos.length;
+}
+
+function htmlEstrelas(media, total) {
+  const preenchidas = Math.round(media);
+  const estrelas = Array.from({ length: 5 }, (_, index) => {
+    const valor = index + 1;
+    const ativa = valor <= preenchidas ? 'filled' : '';
+    return `<button type="button" class="star-btn ${ativa}" data-valor="${valor}" aria-label="${valor} estrela${valor > 1 ? 's' : ''}">★</button>`;
+  }).join('');
+
+  return `${estrelas}<span class="rating-count">(${total})</span>`;
+}
+
+function renderStars(id, container = null) {
+  const target = container || document.querySelector(`.card-stars[data-recipe-id="${id}"]`);
+  if (!target) return;
+
+  const media = calcMedia(id);
+  const total = Array.isArray(ratings[String(id)]) ? ratings[String(id)].length : 0;
+  target.innerHTML = htmlEstrelas(media, total);
+
+  target.querySelectorAll('.star-btn').forEach((btn, index) => {
+    const valor = index + 1;
+    btn.addEventListener('mouseenter', () => {
+      target.querySelectorAll('.star-btn').forEach((estrela, posicao) => {
+        estrela.classList.toggle('hovered', posicao < valor);
+      });
+    });
+
+    btn.addEventListener('mouseleave', () => {
+      target.querySelectorAll('.star-btn').forEach(estrela => estrela.classList.remove('hovered'));
+    });
+
+    btn.addEventListener('click', () => votar(id, valor));
+  });
+}
+
+function votar(id, valor) {
+  const chave = String(id);
+  if (!Array.isArray(ratings[chave])) {
+    ratings[chave] = [];
+  }
+
+  ratings[chave].push(Number(valor));
+  salvar();
+  renderCards();
+}
+
+function renderCards() {
+  renderizarReceitas();
+}
+
 // ===== MENU MOBILE =====
 navToggle.addEventListener('click', () => {
   const isOpen = navLinks.classList.toggle('open');
@@ -162,9 +220,12 @@ function criarCard(receita) {
       <span class="card-category">${receita.categoria}</span>
       <h3 class="card-title">${receita.nome}</h3>
       <p class="card-time">⏱ ${receita.tempo} minutos</p>
+      <div class="card-stars" data-recipe-id="${receita.id}"></div>
       <button type="button" class="card-btn">Ver receita</button>
     </div>
   `;
+
+  renderStars(receita.id, card.querySelector('.card-stars'));
 
   // Ação do botão "Ver receita"
   card.querySelector('.card-btn').addEventListener('click', () => {
