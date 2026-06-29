@@ -1,5 +1,5 @@
 /* ========================================
-   Sabor Coletivo — Script
+   Receitas de Família — Script
    JavaScript puro (sem frameworks)
    ======================================== */
 
